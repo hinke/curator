@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 // Correct Next.js page props typing
 type Props = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
@@ -17,7 +17,7 @@ const TAG_NAMES: { [key: string]: string } = {
   // ... add other mappings
 };
 
-const getArtifacts = (tagSlug: string) => {
+const getArtifacts = async (tagSlug: string) => {
   // This would typically be an API call
   return [
     {
@@ -38,9 +38,10 @@ const getArtifacts = (tagSlug: string) => {
   ];
 };
 
-export default function TagArtifactsPage({ params, searchParams }: Props) {
-  const tagName = TAG_NAMES[params.slug] || params.slug;
-  const artifacts = getArtifacts(params.slug);
+export default async function TagArtifactsPage({ params, searchParams }: Props) {
+  const slug = await params.slug;
+  const tagName = TAG_NAMES[slug] || slug;
+  const artifacts = await getArtifacts(slug);
 
   return (
     <div className="min-h-screen bg-gray-50">
