@@ -1,8 +1,9 @@
 import React from 'react';
 import { Tag, Tags } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import Link from 'next/link';
 
-const CuratorLanding = () => {
+export default function CuratorLanding() {
   const tags = [
     { id: 'code', label: 'Code', count: 342 },
     { id: 'visualization', label: 'Visualization', count: 156 },
@@ -33,29 +34,26 @@ const CuratorLanding = () => {
       <main className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {tags.map((tag) => (
-            <Card 
-              key={tag.id}
-              className="group hover:shadow-lg transition-shadow duration-200 cursor-pointer"
-            >
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <Tag className="h-5 w-5 text-blue-600 group-hover:text-blue-700" />
-                    <span className="font-mono text-lg font-medium text-gray-900">
-                      {tag.label}
+            <Link key={tag.id} href={`/tag/${tag.id}`}>
+              <Card className="group hover:shadow-lg transition-shadow duration-200 cursor-pointer">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <Tag className="h-5 w-5 text-blue-600 group-hover:text-blue-700" />
+                      <span className="font-mono text-lg font-medium text-gray-900">
+                        {tag.label}
+                      </span>
+                    </div>
+                    <span className="px-3 py-1 rounded-full bg-gray-100 text-sm font-mono text-gray-600">
+                      {tag.count}
                     </span>
                   </div>
-                  <span className="px-3 py-1 rounded-full bg-gray-100 text-sm font-mono text-gray-600">
-                    {tag.count}
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       </main>
     </div>
   );
-};
-
-export default CuratorLanding;
+}

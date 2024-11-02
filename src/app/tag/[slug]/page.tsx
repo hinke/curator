@@ -1,10 +1,25 @@
 import React from 'react';
 import { Tags, ArrowLeft, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Link from 'next/link';
 
-const TagArtifactsPage = () => {
-  // Sample artifact data - in reality this would come from an API
-  const artifacts = [
+interface TagArtifactsPageProps {
+  params: {
+    slug: string;
+  }
+}
+
+// Sample mapping of tag slugs to readable names
+const TAG_NAMES = {
+  'visualization': 'Visualization',
+  'code': 'Code',
+  'analysis': 'Analysis',
+  // ... add other mappings
+};
+
+const getArtifacts = (tagSlug: string) => {
+  // This would typically be an API call
+  return [
     {
       id: 1,
       title: "Sales Dashboard",
@@ -19,63 +34,13 @@ const TagArtifactsPage = () => {
         </div>
       )
     },
-    {
-      id: 2,
-      title: "Tic Tac Toe Game",
-      type: "game",
-      content: (
-        <div className="w-full h-64 bg-gray-50 rounded-lg p-4">
-          <div className="grid grid-cols-3 gap-2 h-full">
-            {Array(9).fill(null).map((_, i) => (
-              <div key={i} className="bg-white rounded-md shadow-sm hover:bg-gray-100 cursor-pointer 
-                                    flex items-center justify-center text-2xl font-bold border" />
-            ))}
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 3,
-      title: "Particle Animation",
-      type: "visualization",
-      content: (
-        <div className="w-full h-64 bg-black rounded-lg overflow-hidden">
-          {Array(20).fill(null).map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-2 h-2 bg-white rounded-full animate-ping"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 2}s`,
-                animationDuration: `${1 + Math.random() * 2}s`
-              }}
-            />
-          ))}
-        </div>
-      )
-    },
-    {
-      id: 4,
-      title: "Color Palette Generator",
-      type: "tool",
-      content: (
-        <div className="w-full h-64 rounded-lg overflow-hidden">
-          <div className="grid grid-cols-5 h-full">
-            {['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD'].map((color, i) => (
-              <div key={i} style={{ backgroundColor: color }} className="hover:opacity-90 cursor-pointer">
-                <div className="h-full flex items-end justify-center p-2">
-                  <span className="text-xs font-mono text-white bg-black/30 px-2 py-1 rounded">
-                    {color}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )
-    }
+    // ... other artifacts
   ];
+};
+
+export default function TagArtifactsPage({ params }: TagArtifactsPageProps) {
+  const tagName = TAG_NAMES[params.slug as keyof typeof TAG_NAMES] || params.slug;
+  const artifacts = getArtifacts(params.slug);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -83,16 +48,16 @@ const TagArtifactsPage = () => {
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex items-center space-x-4">
-            <button className="hover:text-blue-600 transition-colors">
+            <Link href="/" className="hover:text-blue-600 transition-colors">
               <ArrowLeft className="h-6 w-6" />
-            </button>
+            </Link>
             <Tags className="h-8 w-8 text-blue-600" />
             <div>
               <h1 className="text-3xl font-mono font-bold tracking-tight text-gray-900">
-                Visualization
+                {tagName}
               </h1>
               <p className="mt-1 text-sm text-gray-500 font-mono">
-                Exploring 156 visualization artifacts
+                Exploring {artifacts.length} {tagName.toLowerCase()} artifacts
               </p>
             </div>
           </div>
@@ -125,6 +90,4 @@ const TagArtifactsPage = () => {
       </main>
     </div>
   );
-};
-
-export default TagArtifactsPage;
+}
