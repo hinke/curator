@@ -3,11 +3,10 @@ import { Tags, ArrowLeft, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 
-// Correct Next.js page props typing
-type Props = {
-  params: Promise<{ slug: string }>;
+type PageProps = {
+  params: { slug: string };
   searchParams: { [key: string]: string | string[] | undefined };
-}
+};
 
 // Sample mapping of tag slugs to readable names
 const TAG_NAMES: { [key: string]: string } = {
@@ -38,10 +37,12 @@ const getArtifacts = async (tagSlug: string) => {
   ];
 };
 
-export default async function TagArtifactsPage({ params, searchParams }: Props) {
-  const slug = await params.slug;
-  const tagName = TAG_NAMES[slug] || slug;
-  const artifacts = await getArtifacts(slug);
+export default async function TagArtifactsPage({
+  params,
+  searchParams,
+}: PageProps) {
+  const tagName = TAG_NAMES[params.slug] || params.slug;
+  const artifacts = await getArtifacts(params.slug);
 
   return (
     <div className="min-h-screen bg-gray-50">
