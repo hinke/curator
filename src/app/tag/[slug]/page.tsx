@@ -1,7 +1,8 @@
 import React from 'react';
-import { Tags, ArrowLeft, ExternalLink } from 'lucide-react';
+import { Tags, ArrowLeft, ExternalLink, BarChart3, LineChart, Code2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
+import { artifacts, type Artifact } from '@/data/artifacts';
 
 // Get the correct Next.js types
 type Props = {
@@ -16,24 +17,44 @@ const TAG_NAMES: { [key: string]: string } = {
   // ... add other mappings
 };
 
-const getArtifacts = async (tagSlug: string) => {
-  // This would typically be an API call
-  return [
-    {
-      id: 1,
-      title: "Sales Dashboard",
-      type: "visualization",
-      content: (
-        <div className="w-full h-64 bg-blue-50 rounded-lg p-4">
-          <div className="space-y-2">
-            <div className="w-full h-8 bg-blue-200 rounded animate-pulse" />
-            <div className="w-3/4 h-8 bg-blue-300 rounded animate-pulse" />
-            <div className="w-1/2 h-8 bg-blue-400 rounded animate-pulse" />
+const getArtifacts = async (tagSlug: string): Promise<Artifact[]> => {
+  // Filter artifacts by tag
+  return artifacts.filter(artifact => artifact.tag === tagSlug);
+};
+
+// Create a new component for rendering individual artifacts
+const ArtifactCard = ({ artifact }: { artifact: Artifact }) => {
+  return (
+    <Card className="hover:shadow-md transition-shadow">
+      <CardHeader className="p-4 pb-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="text-blue-600">
+              {artifact.tag === 'visualization' && <BarChart3 className="h-5 w-5" />}
+              {artifact.tag === 'analysis' && <LineChart className="h-5 w-5" />}
+              {artifact.tag === 'code' && <Code2 className="h-5 w-5" />}
+            </div>
+            <CardTitle className="font-mono text-sm">
+              {artifact.title}
+            </CardTitle>
           </div>
+          <Link 
+            href={artifact.url} 
+            target="_blank" 
+            className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+            aria-label={`Open ${artifact.title} in new tab`}
+          >
+            <ExternalLink className="h-4 w-4 text-gray-500" />
+          </Link>
         </div>
-      )
-    },
-  ];
+      </CardHeader>
+      <CardContent className="px-4 pb-3 pt-0">
+        <p className="text-xs text-gray-400 font-mono truncate" title={artifact.url}>
+          {artifact.url}
+        </p>
+      </CardContent>
+    </Card>
+  );
 };
 
 async function TagArtifactsPage({ params }: Props) {
@@ -63,27 +84,11 @@ async function TagArtifactsPage({ params }: Props) {
         </div>
       </header>
 
-      {/* Main content */}
+      {/* Updated main content with more compact grid */}
       <main className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {artifacts.map((artifact) => (
-            <Card key={artifact.id} className="overflow-hidden">
-              <CardHeader className="bg-white border-b border-gray-100">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="font-mono text-lg">
-                    {artifact.title}
-                  </CardTitle>
-                  <button className="p-1 hover:bg-gray-100 rounded-full transition-colors">
-                    <ExternalLink className="h-4 w-4 text-gray-500" />
-                  </button>
-                </div>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="relative">
-                  {artifact.content}
-                </div>
-              </CardContent>
-            </Card>
+            <ArtifactCard key={artifact.id} artifact={artifact} />
           ))}
         </div>
       </main>
