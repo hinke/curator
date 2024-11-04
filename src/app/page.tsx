@@ -58,27 +58,30 @@ export default function HomePage() {
 
       <main className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {tags.map((tag) => (
-            <Link 
-              key={tag} 
-              href={`/tag/${toSlug(tag)}`}
-              className="block hover:transform hover:scale-[1.02] transition-all"
-            >
-              <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
-                <div className="flex items-center space-x-3">
-                  <div className="text-blue-600">
-                    {getIconForTag(tag)}
+          {tags.map((tag) => {
+            const artifactCount = artifacts.filter(a => a.tag === tag).length;
+            return (
+              <Link 
+                key={tag} 
+                href={`/tag/${toSlug(tag)}`}
+                className="block hover:transform hover:scale-[1.02] transition-all"
+              >
+                <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                  <div className="flex items-center space-x-3">
+                    <div className="text-blue-600">
+                      {getIconForTag(tag)}
+                    </div>
+                    <h2 className="text-lg font-mono font-semibold">
+                      {tag}
+                    </h2>
                   </div>
-                  <h2 className="text-lg font-mono font-semibold">
-                    {tag}
-                  </h2>
+                  <p className="mt-2 text-sm text-gray-500 font-mono">
+                    {artifactCount} artifact{artifactCount !== 1 ? 's' : ''}
+                  </p>
                 </div>
-                <p className="mt-2 text-sm text-gray-500 font-mono">
-                  {artifacts.filter(a => a.tag === tag).length} artifacts
-                </p>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </main>
     </div>

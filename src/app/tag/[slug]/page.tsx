@@ -53,9 +53,8 @@ const getArtifacts = async (tagSlug: string): Promise<Artifact[]> => {
 async function TagArtifactsPage({ params }: Props) {
   const { slug } = await params;
   const matchingArtifacts = await getArtifacts(slug);
-  
-  // Get the original tag name from the first artifact, or fallback to the slug
   const tagName = matchingArtifacts[0]?.tag || slug.replace(/-/g, ' ');
+  const artifactCount = matchingArtifacts.length;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -74,7 +73,7 @@ async function TagArtifactsPage({ params }: Props) {
                 {tagName}
               </h1>
               <p className="mt-1 text-sm text-gray-500 font-mono">
-                Exploring {matchingArtifacts.length} {tagName.toLowerCase()} artifacts
+                Exploring {tagName.toLowerCase()} artifacts
               </p>
             </div>
           </div>
