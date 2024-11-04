@@ -9,12 +9,6 @@ const getUniqueTags = () => {
   return Array.from(tags);
 };
 
-// Sample mapping of tag slugs to readable names (you might want to move this to a shared location)
-const TAG_NAMES: { [key: string]: string } = {
-  'visualization': 'Visualization',
-  'code': 'Code',
-  'analysis': 'Analysis',
-};
 
 export default function HomePage() {
   const tags = getUniqueTags();
@@ -45,7 +39,7 @@ export default function HomePage() {
                 <div className="flex items-center space-x-3">
                   <Tags className="h-6 w-6 text-blue-600" />
                   <h2 className="text-lg font-mono font-semibold">
-                    {TAG_NAMES[tag] || tag}
+                    {tag.charAt(0).toUpperCase() + tag.slice(1)}
                   </h2>
                 </div>
                 <p className="mt-2 text-sm text-gray-500 font-mono">
